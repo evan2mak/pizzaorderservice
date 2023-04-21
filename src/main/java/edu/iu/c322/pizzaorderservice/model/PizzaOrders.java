@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Orders {
+public class PizzaOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int orderId;
     private int customerId;
-    private double total;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @Valid
     private ShippingAddress shippingAddress;
@@ -24,18 +22,12 @@ public class Orders {
     @Valid
     private Payment payment;
     private String cancelOrder;
+
     public int getCustomerId() {
         return customerId;
     }
     public void setCustomerId(int customerId) {
         this.customerId = customerId;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-    public void setTotal(double total) {
-        this.total = total;
     }
 
     public ShippingAddress getShippingAddress() {
@@ -55,6 +47,7 @@ public class Orders {
     public List<Item> getItems() {
         return items;
     }
+
     public void setItems(List<Item> items) {
         this.items = items;
     }
@@ -77,13 +70,12 @@ public class Orders {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Orders order = (Orders) o;
-        return customerId == order.customerId && Objects.equals(total, order.total) && Objects.equals(shippingAddress, order.shippingAddress) && Objects.equals(items, order.items) && Objects.equals(payment, order.payment);
+        if (!(o instanceof PizzaOrders pizzaOrders)) return false;
+        return getOrderId() == pizzaOrders.getOrderId() && getCustomerId() == pizzaOrders.getCustomerId() && Objects.equals(getShippingAddress(), pizzaOrders.getShippingAddress()) && Objects.equals(getItems(), pizzaOrders.getItems()) && Objects.equals(getPayment(), pizzaOrders.getPayment()) && Objects.equals(getCancelOrder(), pizzaOrders.getCancelOrder());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customerId, total, shippingAddress, items, payment);
+        return Objects.hash(getOrderId(), getCustomerId(), getShippingAddress(), getItems(), getPayment(), getCancelOrder());
     }
 }

@@ -1,8 +1,7 @@
 package edu.iu.c322.pizzaorderservice.model;
 
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.Valid;
 
 import java.util.Objects;
 
@@ -11,30 +10,44 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int itemId;
-    @NotEmpty(message = "Name cannot be empty.")
-    private String name;
+    @OneToOne(cascade = CascadeType.ALL)
+    @Valid
+    private Pepperoni pepperoni;
+    @OneToOne(cascade = CascadeType.ALL)
+    @Valid
+    private Sausage sausage;
+    @OneToOne(cascade = CascadeType.ALL)
+    @Valid
+    private ExtraCheese extraCheese;
     private int quantity;
-
-    private double price;
+    private double totalCost;
     private boolean returned;
     private String reason;
     private String trackingStatus;
     private String date;
 
-    public int getItemId() {
-        return itemId;
+    public Pepperoni getPepperoni() {
+        return pepperoni;
     }
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
+    public void setPepperoni(Pepperoni pepperoni) {
+        this.pepperoni = pepperoni;
     }
 
-    public String getName() {
-        return name;
+    public Sausage getSausage() {
+        return sausage;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSausage(Sausage sausage) {
+        this.sausage = sausage;
+    }
+
+    public ExtraCheese getExtraCheese() {
+        return extraCheese;
+    }
+
+    public void setExtraCheese(ExtraCheese extraCheese) {
+        this.extraCheese = extraCheese;
     }
 
     public int getQuantity() {
@@ -45,13 +58,28 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public double getPrice() {
-        return price;
+    public double getTotalCost() {
+        if (extraCheese.isAdd()) {
+            totalCost = quantity * (pepperoni.getQuantity() * pepperoni.getCost()) + (sausage.getQuantity() * sausage.getCost()) + (extraCheese.getCost());
+        }
+        else {
+            totalCost = quantity * (pepperoni.getQuantity() * pepperoni.getCost()) + (sausage.getQuantity() * sausage.getCost());
+        }
+        return totalCost;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
     public boolean isReturned() {
         return returned;
     }
@@ -87,14 +115,12 @@ public class Item {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Item item = (Item) o;
-        return quantity == item.getQuantity() && name.equals(item.getName()) && Objects.equals(price, item.getPrice());
+        if (!(o instanceof Item item)) return false;
+        return getItemId() == item.getItemId() && getQuantity() == item.getQuantity() && Double.compare(item.getTotalCost(), getTotalCost()) == 0 && isReturned() == item.isReturned() && Objects.equals(getPepperoni(), item.getPepperoni()) && Objects.equals(getSausage(), item.getSausage()) && Objects.equals(getExtraCheese(), item.getExtraCheese()) && Objects.equals(getReason(), item.getReason()) && Objects.equals(getTrackingStatus(), item.getTrackingStatus()) && Objects.equals(getDate(), item.getDate());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, quantity, price);
+        return Objects.hash(getItemId(), getPepperoni(), getSausage(), getExtraCheese(), getQuantity(), getTotalCost(), isReturned(), getReason(), getTrackingStatus(), getDate());
     }
 }
-
