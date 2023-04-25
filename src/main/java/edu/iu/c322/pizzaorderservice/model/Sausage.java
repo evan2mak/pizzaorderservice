@@ -12,15 +12,23 @@ public class Sausage {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int sausageId;
-    private int quantity;
+    private boolean add;
     private double cost = 1.49;
 
-    public int getQuantity() {
-        return quantity;
+    public int getSausageId() {
+        return sausageId;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setSausageId(int sausageId) {
+        this.sausageId = sausageId;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
     }
 
     public double getCost() {
@@ -35,11 +43,11 @@ public class Sausage {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Sausage sausage)) return false;
-        return getQuantity() == sausage.getQuantity() && Double.compare(sausage.getCost(), getCost()) == 0;
+        return getSausageId() == sausage.getSausageId() && isAdd() == sausage.isAdd() && Double.compare(sausage.getCost(), getCost()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getQuantity(), getCost());
+        return Objects.hash(getSausageId(), isAdd(), getCost());
     }
 }

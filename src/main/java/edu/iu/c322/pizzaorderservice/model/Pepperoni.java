@@ -12,15 +12,23 @@ public class Pepperoni {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int pepperoniId;
-    private int quantity;
+    private boolean add;
     private double cost = 1.49;
 
-    public int getQuantity() {
-        return quantity;
+    public int getPepperoniId() {
+        return pepperoniId;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setPepperoniId(int pepperoniId) {
+        this.pepperoniId = pepperoniId;
+    }
+
+    public boolean isAdd() {
+        return add;
+    }
+
+    public void setAdd(boolean add) {
+        this.add = add;
     }
 
     public double getCost() {
@@ -35,11 +43,11 @@ public class Pepperoni {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Pepperoni pepperoni)) return false;
-        return getQuantity() == pepperoni.getQuantity() && Double.compare(pepperoni.getCost(), getCost()) == 0;
+        return getPepperoniId() == pepperoni.getPepperoniId() && isAdd() == pepperoni.isAdd() && Double.compare(pepperoni.getCost(), getCost()) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getQuantity(), getCost());
+        return Objects.hash(getPepperoniId(), isAdd(), getCost());
     }
 }

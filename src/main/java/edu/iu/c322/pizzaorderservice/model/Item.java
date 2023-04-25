@@ -3,6 +3,7 @@ package edu.iu.c322.pizzaorderservice.model;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +22,7 @@ public class Item {
     private ExtraCheese extraCheese;
     private int quantity;
     private double totalCost;
+    private int baseCostPlainPizza = 10;
     private boolean returned;
     private String reason;
     private String trackingStatus;
@@ -59,13 +61,32 @@ public class Item {
     }
 
     public double getTotalCost() {
-        if (extraCheese.isAdd()) {
-            totalCost = quantity * (pepperoni.getQuantity() * pepperoni.getCost()) + (sausage.getQuantity() * sausage.getCost()) + (extraCheese.getCost());
+        if (pepperoni.isAdd() && sausage.isAdd() && extraCheese.isAdd()){
+            totalCost = (baseCostPlainPizza + (pepperoni.getCost() + sausage.getCost() + extraCheese.getCost())) * quantity;
+        }
+        else if (pepperoni.isAdd() && sausage.isAdd()){
+            totalCost = (baseCostPlainPizza + (pepperoni.getCost() + sausage.getCost())) * quantity;
+        }
+        else if (pepperoni.isAdd() && extraCheese.isAdd()){
+            totalCost = (baseCostPlainPizza + (pepperoni.getCost() + extraCheese.getCost())) * quantity;
+        }
+        else if (sausage.isAdd() && extraCheese.isAdd()){
+            totalCost = (baseCostPlainPizza + (sausage.getCost() + extraCheese.getCost())) * quantity;
+        }
+        else if(pepperoni.isAdd()){
+            totalCost = (baseCostPlainPizza + pepperoni.getCost()) * quantity;
+        }
+        else if(sausage.isAdd()){
+            totalCost = (baseCostPlainPizza + sausage.getCost()) * quantity;
+        }
+        else if(extraCheese.isAdd()){
+            totalCost = (baseCostPlainPizza + extraCheese.getCost()) * quantity;
         }
         else {
-            totalCost = quantity * (pepperoni.getQuantity() * pepperoni.getCost()) + (sausage.getQuantity() * sausage.getCost());
+            totalCost = baseCostPlainPizza * quantity;
         }
-        return totalCost;
+        DecimalFormat df = new DecimalFormat("#.##");
+        return Double.parseDouble(df.format(totalCost));
     }
 
     public void setTotalCost(double totalCost) {
