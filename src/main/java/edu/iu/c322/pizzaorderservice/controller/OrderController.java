@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/orders")
-@CrossOrigin(origins = "http://localhost:3000/")
+@CrossOrigin(origins = "https://pizzaservice-frontend.vercel.app/")
 public class OrderController {
     // Implement decorator pattern somewhere
 
